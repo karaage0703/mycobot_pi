@@ -9,14 +9,14 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 import random
 
-PLOT_AREA = 0.3
+PLOT_AREA = 0.5
+
 
 class Link:
     def __init__(self, dh_params):
         self.dh_params_ = dh_params
 
     def transformation_matrix(self):
-        # theta = self.dh_params_[0]
         theta = self.joint_angle_
         alpha = self.dh_params_[1]
         a = self.dh_params_[2]
@@ -47,8 +47,6 @@ class Link:
 
 class NLinkArm:
     def __init__(self, dh_params_list):
-        self.fig = plt.figure()
-        self.ax = Axes3D(self.fig)
         self.link_list = []
         for i in range(len(dh_params_list)):
             self.link_list.append(Link(dh_params_list[i]))
@@ -225,12 +223,14 @@ def random_val(min_val, max_val):
     return min_val + random.random() * (max_val - min_val)
 
 
-n_link_arm = NLinkArm([[0., -math.pi / 2, 0, 0.13156],
-                       [-math.pi / 2., 0., 0.1104, 0.06639],
-                       [0., 0., 0.096, -0.06639],
-                       [0., math.pi / 2, 0.07318, 0.06639],
-                       [0., math.pi / 2, 0.0436, 0.],
-                       [0., 0., 0., 0.]])
+# myCobot DH parameters
+# [theta, alpha, a, d]
+n_link_arm = NLinkArm([[0., math.pi / 2, 0, 0.13156],
+                       [0., 0., -0.1104, 0.],
+                       [0., 0., -0.096, 0.],
+                       [0., math.pi / 2, 0., 0.06639],
+                       [0., -math.pi / 2, 0., 0.07318],
+                       [0., 0., 0., 0.0436]])
 
 n_link_arm.set_joint_angles([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
 n_link_arm.forward_kinematics(plot=True)
