@@ -17,7 +17,8 @@ class Link:
         self.dh_params_ = dh_params
 
     def transformation_matrix(self):
-        theta = self.joint_angle_
+        # theta = self.joint_angle_
+        theta = self.dh_params_[0]
         alpha = self.dh_params_[1]
         a = self.dh_params_[2]
         d = self.dh_params_[3]
@@ -178,13 +179,25 @@ class NLinkArm:
 
     def set_joint_angles(self, joint_angle_list):
         for i in range(len(self.link_list)):
-            # self.link_list[i].dh_params_[0] += joint_angle_list[i]
-            self.link_list[i].joint_angle_ = self.link_list[i].dh_params_[0] + joint_angle_list[i]
+            self.link_list[i].dh_params_[0] = joint_angle_list[i]
 
     def update_joint_angles(self, diff_joint_angle_list):
         for i in range(len(self.link_list)):
-            # self.link_list[i].dh_params_[0] += diff_joint_angle_list[i]
-            self.link_list[i].joint_angle_ += diff_joint_angle_list[i]
+            self.link_list[i].dh_params_[0] += diff_joint_angle_list[i]
+
+    def get_joint_angles(self):
+        joint_angles = []
+        for i in range(len(self.link_list)):
+            joint_angle = self.link_list[i].dh_params_[0]
+            while joint_angle > math.pi:
+                joint_angle -= 2 * math.pi
+
+            while joint_angle < -math.pi:
+                joint_angle += 2 * math.pi
+
+            joint_angles.append(joint_angle)
+
+        return joint_angles
 
     def plot(self):
         self.fig = plt.figure()
@@ -221,6 +234,26 @@ class NLinkArm:
 
 def random_val(min_val, max_val):
     return min_val + random.random() * (max_val - min_val)
+
+
+def conv_joint_angle_mycobot_to_sim(joint_angles):
+    conv_mul = [-1.0, -1.0, 1.0, -1.0, -1.0, -1.0]
+    conv_add = [0.0, -math.pi / 2, 0.0, -math.pi / 2, math.pi / 2, 0.0]
+
+    joint_angles = [joint_angles * conv_mul for (joint_angles, conv_mul) in zip(joint_angles, conv_mul)]
+    joint_angles = [joint_angles + conv_add for (joint_angles, conv_add) in zip(joint_angles, conv_add)]
+
+    return joint_angles
+
+
+def conv_joint_angle_sim_to_mycobot(joint_angles):
+    conv_mul = [-1.0, -1.0, 1.0, -1.0, -1.0, -1.0]
+    conv_add = [0.0, -math.pi / 2, 0.0, -math.pi / 2, math.pi / 2, 0.0]
+
+    joint_angles = [joint_angles * conv_mul for (joint_angles, conv_mul) in zip(joint_angles, conv_mul)]
+    joint_angles = [joint_angles + conv_add for (joint_angles, conv_add) in zip(joint_angles, conv_add)]
+
+    return joint_angles
 
 
 # myCobot DH parameters
