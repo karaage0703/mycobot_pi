@@ -177,7 +177,7 @@ class NLinkArm:
 
         return alpha, beta, gamma
 
-    def set_joint_angles(self, joint_angle_list):
+    def send_angles(self, joint_angle_list):
         for i in range(len(self.link_list)):
             self.link_list[i].dh_params_[0] = joint_angle_list[i]
 
@@ -185,7 +185,7 @@ class NLinkArm:
         for i in range(len(self.link_list)):
             self.link_list[i].dh_params_[0] += diff_joint_angle_list[i]
 
-    def get_joint_angles(self):
+    def get_angles(self):
         joint_angles = []
         for i in range(len(self.link_list)):
             joint_angle = self.link_list[i].dh_params_[0]
@@ -246,5 +246,5 @@ if __name__ == "__main__":
                         [0., -math.pi / 2, 0., 0.07318],
                         [0., 0., 0., 0.0436]])
 
-    n_link_arm.set_joint_angles([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+    n_link_arm.send_angles([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
     n_link_arm.forward_kinematics(plot=True)

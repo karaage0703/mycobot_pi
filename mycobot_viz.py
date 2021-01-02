@@ -1,4 +1,3 @@
-# import random
 import math
 from vizualization import NLinkArm
 from mycobot3 import MyCobot
@@ -6,17 +5,7 @@ from mycobot3 import MyCobot
 DEVICE_NAME = '/dev/tty.SLAB_USBtoUART'
 
 
-def conv_joint_angle_mycobot_to_sim(joint_angles):
-    conv_mul = [-1.0, -1.0, 1.0, -1.0, -1.0, -1.0]
-    conv_add = [0.0, -math.pi / 2, 0.0, -math.pi / 2, math.pi / 2, 0.0]
-
-    joint_angles = [joint_angles * conv_mul for (joint_angles, conv_mul) in zip(joint_angles, conv_mul)]
-    joint_angles = [joint_angles + conv_add for (joint_angles, conv_add) in zip(joint_angles, conv_add)]
-
-    return joint_angles
-
-
-def conv_joint_angle_sim_to_mycobot(joint_angles):
+def convert_joint_angles_sim_to_mycobot(joint_angles):
     conv_mul = [-1.0, -1.0, 1.0, -1.0, -1.0, -1.0]
     conv_add = [0.0, -math.pi / 2, 0.0, -math.pi / 2, math.pi / 2, 0.0]
 
@@ -37,17 +26,17 @@ def conv_joint_angle_sim_to_mycobot(joint_angles):
 
 
 def draw_robot():
-    mycobot_sim.set_joint_angles(conv_joint_angle_mycobot_to_sim(mycobot.get_angles()))
+    mycobot_sim.send_angles(convert_joint_angles_sim_to_mycobot(mycobot.get_angles_of_radian()))
     mycobot_sim.forward_kinematics(plot=True)
 
 
 def calc_ik(pos, plot=False):
     mycobot_sim.inverse_kinematics(pos, plot=plot)
-    return conv_joint_angle_sim_to_mycobot(mycobot_sim.get_joint_angles())
+    return convert_joint_angles_sim_to_mycobot(mycobot_sim.get_angles())
 
 
 def move_robot(pose, speed=50):
-    mycobot.send_angles_by_radian(conv_joint_angle_sim_to_mycobot(mycobot_sim.get_joint_angles()), speed)
+    mycobot.send_angles_by_radian(convert_joint_angles_sim_to_mycobot(mycobot_sim.get_angles()), speed)
 
 
 def move_initial_pose(speed=50):
@@ -57,8 +46,8 @@ def move_initial_pose(speed=50):
 mycobot = MyCobot(DEVICE_NAME)
 
 mycobot_sim = NLinkArm([[0., math.pi / 2, 0, 0.13156],
-                    [0., 0., -0.1104, 0.],
-                    [0., 0., -0.096, 0.],
-                    [0., math.pi / 2, 0., 0.06639],
-                    [0., -math.pi / 2, 0., 0.07318],
-                    [0., 0., 0., 0.0436]])
+                        [0., 0., -0.1104, 0.],
+                        [0., 0., -0.096, 0.],
+                        [0., math.pi / 2, 0., 0.06639],
+                        [0., -math.pi / 2, 0., 0.07318],
+                        [0., 0., 0., 0.0436]])
