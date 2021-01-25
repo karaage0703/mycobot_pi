@@ -11,15 +11,17 @@ Python script of myCobot
 - macOS / Linux
 - Numpy
 - Matplotlib
+- myCobot Atom version 2.4
+- pymycobot==2.1.2
 
 ## Setup
 
 Execute following commands:
 
 ```sh
+$ pip3 install pymycobot==2.1.2
 $ git clone https://github.com/karaage0703/mycobot_pi
 $ cd mycobot_pi
-$ wget https://raw.githubusercontent.com/elephantrobotics/myCobot/main/API/Python/pymycobot/mycobot3.py
 ```
 
 ## Usage
@@ -29,9 +31,9 @@ $ python3 -i mycobot_viz.py
 >>> move_initial_pose(speed=50)
 >>> draw_robot()
 >>> joint_angles = calc_ik([0.15, 0.2, 0.1, 0, 0, 0], plot=True)
->>> move_robot(joint_angles, speed=50)
+>>> move_robot(speed=50)
 >>> move_initial_pose()
->>> move_robot(joint_angles, speed=80)
+>>> move_robot(speed=80)
 >>> move_initial_pose(speed=80)
 ```
 

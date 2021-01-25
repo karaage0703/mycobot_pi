@@ -1,11 +1,20 @@
 import math
 from vizualization import NLinkArm
-from mycobot3 import MyCobot
+from pymycobot.mycobot import MyCobot
+from pymycobot.genre import Angle
 
 DEVICE_NAME = '/dev/tty.SLAB_USBtoUART'
 
 
 def convert_joint_angles_sim_to_mycobot(joint_angles):
+    """convert joint angles simulator to mycobot
+
+    Args:
+        joint_angles ([float]): [joint angles(radian)]
+
+    Returns:
+        [float]: [joint angles calculated(radian)]
+    """
     conv_mul = [-1.0, -1.0, 1.0, -1.0, -1.0, -1.0]
     conv_add = [0.0, -math.pi / 2, 0.0, -math.pi / 2, math.pi / 2, 0.0]
 
@@ -26,7 +35,7 @@ def convert_joint_angles_sim_to_mycobot(joint_angles):
 
 
 def draw_robot():
-    mycobot_sim.send_angles(convert_joint_angles_sim_to_mycobot(mycobot.get_angles_of_radian()))
+    mycobot_sim.send_angles(convert_joint_angles_sim_to_mycobot(mycobot.get_radians()))
     mycobot_sim.forward_kinematics(plot=True)
 
 
@@ -35,8 +44,8 @@ def calc_ik(pos, plot=False):
     return convert_joint_angles_sim_to_mycobot(mycobot_sim.get_angles())
 
 
-def move_robot(pose, speed=50):
-    mycobot.send_angles_by_radian(convert_joint_angles_sim_to_mycobot(mycobot_sim.get_angles()), speed)
+def move_robot(speed=50):
+    mycobot.send_radians(convert_joint_angles_sim_to_mycobot(mycobot_sim.get_angles()), speed)
 
 
 def move_initial_pose(speed=50):
