@@ -52,6 +52,34 @@ class NLinkArm:
         for i in range(len(dh_params_list)):
             self.link_list.append(Link(dh_params_list[i]))
 
+    @staticmethod
+    def convert_joint_angles_sim_to_mycobot(joint_angles):
+        """convert joint angles simulator to mycobot
+
+        Args:
+            joint_angles ([float]): [joint angles(radian)]
+
+        Returns:
+            [float]: [joint angles calculated(radian)]
+        """
+        conv_mul = [-1.0, -1.0, 1.0, -1.0, -1.0, -1.0]
+        conv_add = [0.0, -math.pi / 2, 0.0, -math.pi / 2, math.pi / 2, 0.0]
+
+        joint_angles = [joint_angles * conv_mul for (joint_angles, conv_mul) in zip(joint_angles, conv_mul)]
+        joint_angles = [joint_angles + conv_add for (joint_angles, conv_add) in zip(joint_angles, conv_add)]
+
+        joint_angles_lim = []
+        for joint_angle in joint_angles:
+            while joint_angle > math.pi:
+                joint_angle -= 2 * math.pi
+
+            while joint_angle < -math.pi:
+                joint_angle += 2 * math.pi
+
+            joint_angles_lim.append(joint_angle)
+
+        return joint_angles_lim
+
     def transformation_matrix(self):
         trans = np.identity(4)
         for i in range(len(self.link_list)):
@@ -239,12 +267,14 @@ def random_val(min_val, max_val):
 if __name__ == "__main__":
     # myCobot DH parameters
     # [theta, alpha, a, d]
-    n_link_arm = NLinkArm([[0., math.pi / 2, 0, 0.13156],
+    mycobot_sim = NLinkArm([[0., math.pi / 2, 0, 0.13156],
                         [0., 0., -0.1104, 0.],
                         [0., 0., -0.096, 0.],
                         [0., math.pi / 2, 0., 0.06639],
                         [0., -math.pi / 2, 0., 0.07318],
                         [0., 0., 0., 0.0436]])
 
-    n_link_arm.send_angles([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
-    n_link_arm.forward_kinematics(plot=True)
+    mycobot_sim.send_angles(
+        mycobot_sim.convert_joint_angles_sim_to_mycobot
+        ([0.0, 0.0, 0.0, 0.0, 0.0, 0.0]))
+    mycobot_sim.forward_kinematics(plot=True)
