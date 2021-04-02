@@ -21,7 +21,7 @@ Execute following commands:
 ```sh
 $ pip3 install numpy
 $ pip3 install matplotlib
-$ pip3 install pymycobot==2.1.2
+$ pip3 install pymycobot==2.3.3
 $ git clone https://github.com/karaage0703/mycobot_pi
 $ cd mycobot_pi
 ```
