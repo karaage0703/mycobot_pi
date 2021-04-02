@@ -11,8 +11,8 @@ Python script of myCobot
 - macOS / Linux
 - Numpy
 - Matplotlib
-- myCobot Atom version 2.4
-- pymycobot==2.1.2
+- myCobot Atom version 2.7
+- pymycobot==2.3.3
 
 ## Setup
 
