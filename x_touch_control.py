@@ -58,3 +58,12 @@ if __name__ == '__main__':
                     else:
                         if midi_control_value == 64:
                             midi_control_enable[midi_control_channel - 5] = True
+
+            if midi_control_channel == 8 or midi_control_channel == 32:
+                mycobot.set_color(0, 0, 0)
+            if midi_control_channel == 9 or midi_control_channel == 33:
+                mycobot.set_color(255, 0, 0)
+            if midi_control_channel == 10 or midi_control_channel == 34:
+                mycobot.set_color(0, 255, 0)
+            if midi_control_channel == 11 or midi_control_channel == 35:
+                mycobot.set_color(0, 0, 255)
